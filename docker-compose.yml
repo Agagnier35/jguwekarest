@@ -2,19 +2,41 @@ version: '3'
 services:
   mongo:
     image: mongo
-    container_name: jguwekamongo
     restart: always
+    networks:
+      - test
+
   jguweka:
-    image: jguweka/jguweka:OAS3
-    container_name: jguwekarest
+    image: agagnier35/jguweka:OAS3
     restart: always
     links:
       - "mongo:mongodb"
-    ports:
-      - "8081:8080"
+  # Uncomment the port section if you want to use jProfiler
+  # Don't forgot to uncomment the dockerfile too
+  # JProfiler is not compatible with docker-compose --scale
+  # ports:
+      #- "8849:8849"
     depends_on:
       - mongo
     labels:
       - "service-name:jguweka"
       - "service-type:app-srv"
       - "environment:test"
+    networks:
+      - test
+
+  haproxy:
+    image: dockercloud/haproxy
+    depends_on:
+      - jguweka
+    links:
+      - jguweka
+    ports:
+      - "8080:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - test
+
+networks:
+  test:

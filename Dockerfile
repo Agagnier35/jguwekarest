@@ -1,5 +1,5 @@
 FROM tomcat:8.0-jre8
-MAINTAINER "M Rautenberg <rautenberg@uni-mainz.de>"
+MAINTAINER "F Agagnier <felix.agagnier@polymtl.ca>"
 
 # remove preinstalled webapps 
 RUN rm -fr /usr/local/tomcat/webapps/ROOT
@@ -24,3 +24,10 @@ RUN chown -R tomcat:root /usr/local/tomcat
 USER 501
 
 EXPOSE 8080
+
+###### Remvove comments to enable JProfiler
+#RUN wget https://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_10_1_5.tar.gz -P /tmp/ &&\
+# tar -xzf /tmp/jprofiler_linux_10_1_5.tar.gz -C /usr/local/tomcat &&\
+# rm /tmp/jprofiler_linux_10_1_5.tar.gz
+#ENV CATALINA_OPTS="$CATALINA_OPTS -agentpath:/usr/local/tomcat/jprofiler10.1.5/bin/linux-x64/libjprofilerti.so=port=8849,wait,config=/usr/local/tomcat/jprofiler10.1.5/config.xml"
+#EXPOSE 8849
